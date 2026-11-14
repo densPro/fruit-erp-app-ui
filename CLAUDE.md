@@ -29,8 +29,9 @@ The single front-end for the whole **fruit ERP**. It is one Next.js app that tal
 | Forms | React Hook Form + Zod |
 | API clients | One client per service via `serviceClient()` in `src/lib/api.ts`. Types are hand-written per domain (`types.ts`) from each service's `/openapi.json`; generating them with `openapi-typescript` is a TODO |
 | Auth | Own httpOnly-cookie session (not Auth.js): `/api/auth/login` calls mango-auth, tokens live in cookies `erp_access` / `erp_refresh`, the proxy refreshes once on a 401. `src/proxy.ts` does the optimistic redirect to `/login` |
+| i18n | `next-intl`, English (`en`, default) and Spanish (`es`). No URL prefix: the locale comes from the `erp_locale` cookie, else `Accept-Language` (`src/i18n/request.ts`). Catalogs in `messages/en.json` / `messages/es.json`, keys typed via `src/global.d.ts`. Header toggle calls the `setLocale` server action |
 | Barcode / scanning | Not built yet. Inputs are scanner-friendly (plain text/number fields, Enter submits) |
-| Tests | Vitest + React Testing Library (set up, 10 unit tests). MSW and Playwright are TODO |
+| Tests | Vitest + React Testing Library (set up, 22 unit tests incl. en/es catalog parity). MSW and Playwright are TODO |
 | Tooling | pnpm, ESLint, Prettier, Husky + lint-staged |
 
 Do not add dependencies without asking.
@@ -77,6 +78,7 @@ Env vars (see `.env.example`, copy to `.env.local`): `MANGO_AUTH_URL` (8003), `M
 | P4 | Cross-module dashboard (one widget per module). Only the Warehouse dashboard exists; `/` redirects to it | derived | [~] |
 | P5 | Global error, forbidden, not-found and offline/service-down states | - | [x] |
 | P6 | Admin module: users, roles, permissions, audit log (only for users who hold the mango-auth admin permissions) | mango-auth admin endpoints | [ ] |
+| P7 | Language switch (English / Spanish), persisted in a cookie; dates follow the UI language | `messages/*.json` | [x] |
 
 ## 6. Module: Warehouse (lime-warehouse)
 
@@ -183,6 +185,7 @@ src/
 - Mutations: disable submit while pending, invalidate affected queries, toast the result.
 - Handle loading, empty, error and forbidden states on every screen.
 - Warehouse flows are hands-on: large touch targets, scanner-friendly inputs (autofocus, Enter to confirm), usable on tablets and phones.
+- **No hard-coded UI text.** Every user-facing string (labels, headings, buttons, toasts, aria-labels, page titles) lives in `messages/en.json` **and** `messages/es.json` under the domain's namespace (`warehouse.<domain>.*`, shared ones in `common`, `status`, `errors`, `validation`); a test fails if the two files' keys or `{placeholders}` differ. Use `useTranslations` in components and hooks, `pageTitle(key)` (`src/lib/i18n/metadata.ts`) for `<title>`, `useFormatDate()` for dates. Zod schemas use message keys (`"validation.required"`); `Field` and `useMessageText()` translate them. Errors go through `useErrors()` (`src/lib/errors.ts`): in English the backend `detail` is shown, in other languages the `code` is translated. Backend status values are shown through `StatusBadge` / the `status` namespace, never raw. A new module adds its own namespace to both files.
 - Accessibility: keyboard navigable, labeled inputs, visible focus ring (`brand-200` on dark).
 - Strict TypeScript, no `any`; validate form input with Zod before sending.
 

@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import { pageTitle } from "@/lib/i18n/metadata";
 import { ItemsView } from "@/modules/warehouse/catalog";
 
-export const metadata: Metadata = { title: "Items" };
+export const generateMetadata = pageTitle("items");
 
 export default function Page() {
   return <ItemsView />;

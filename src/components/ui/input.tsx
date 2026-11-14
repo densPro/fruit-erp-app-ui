@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { useMessageText } from "@/lib/i18n/format";
 
 const field =
   "w-full min-h-10 rounded-md border bg-card px-3 text-sm text-card-foreground placeholder:text-muted-foreground disabled:opacity-60 aria-[invalid=true]:border-danger";
@@ -30,12 +31,13 @@ export function Field({
   hint?: string;
   children: React.ReactNode;
 }) {
+  const message = useMessageText()(error);
   return (
     <label className="grid gap-1.5 text-sm">
       <span className="font-medium">{label}</span>
       {children}
       {hint && !error && <span className="text-xs text-muted-foreground">{hint}</span>}
-      {error && <span className="text-xs text-danger">{error}</span>}
+      {message && <span className="text-xs text-danger">{message}</span>}
     </label>
   );
 }

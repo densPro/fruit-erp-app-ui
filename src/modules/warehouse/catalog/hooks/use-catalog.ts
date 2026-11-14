@@ -1,7 +1,8 @@
 "use client";
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { toastError } from "@/lib/errors";
+import { useTranslations } from "next-intl";
+import { useErrors } from "@/lib/errors";
 import { catalogApi } from "../api";
 
 const LIMIT = 20;
@@ -29,25 +30,31 @@ function useInvalidate() {
 
 export function useCreateItem() {
   const inv = useInvalidate();
-  return useMutation({ mutationFn: catalogApi.createItem, onSuccess: () => { toast.success("Item created"); return inv(); } });
+  const t = useTranslations("warehouse.catalog.items");
+  return useMutation({ mutationFn: catalogApi.createItem, onSuccess: () => { toast.success(t("createdToast")); return inv(); } });
 }
 export function useUpdateItem() {
   const inv = useInvalidate();
+  const t = useTranslations("warehouse.catalog.items");
+  const { toastError } = useErrors();
   return useMutation({
     mutationFn: ({ id, ...b }: { id: string; name?: string; unit?: string; is_active?: boolean }) => catalogApi.updateItem(id, b),
-    onSuccess: () => { toast.success("Item updated"); return inv(); },
+    onSuccess: () => { toast.success(t("updatedToast")); return inv(); },
     onError: toastError,
   });
 }
 export function useCreateLocation() {
   const inv = useInvalidate();
-  return useMutation({ mutationFn: catalogApi.createLocation, onSuccess: () => { toast.success("Location created"); return inv(); } });
+  const t = useTranslations("warehouse.catalog.locations");
+  return useMutation({ mutationFn: catalogApi.createLocation, onSuccess: () => { toast.success(t("createdToast")); return inv(); } });
 }
 export function useUpdateLocation() {
   const inv = useInvalidate();
+  const t = useTranslations("warehouse.catalog.locations");
+  const { toastError } = useErrors();
   return useMutation({
     mutationFn: ({ id, ...b }: { id: string; zone?: string; is_active?: boolean }) => catalogApi.updateLocation(id, b),
-    onSuccess: () => { toast.success("Location updated"); return inv(); },
+    onSuccess: () => { toast.success(t("updatedToast")); return inv(); },
     onError: toastError,
   });
 }

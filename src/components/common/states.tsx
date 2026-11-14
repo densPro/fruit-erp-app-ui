@@ -1,7 +1,9 @@
+"use client";
 import { AlertTriangle, Inbox, Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ApiError } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { errorMessage } from "@/lib/errors";
+import { useErrors } from "@/lib/errors";
 
 export function EmptyState({ title, hint, action }: { title: string; hint?: string; action?: React.ReactNode }) {
   return (
@@ -15,26 +17,30 @@ export function EmptyState({ title, hint, action }: { title: string; hint?: stri
 }
 
 export function ForbiddenState() {
+  const t = useTranslations("states");
   return (
     <div className="flex flex-col items-center gap-2 px-4 py-16 text-center">
       <Lock className="size-8 text-muted-foreground" />
-      <p className="font-medium">You don&apos;t have permission to view this</p>
-      <p className="text-sm text-muted-foreground">Ask an administrator to grant you access.</p>
+      <p className="font-medium">{t("forbiddenTitle")}</p>
+      <p className="text-sm text-muted-foreground">{t("forbiddenHint")}</p>
     </div>
   );
 }
 
 export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
+  const t = useTranslations("states");
+  const tc = useTranslations("common");
+  const { errorMessage } = useErrors();
   if (error instanceof ApiError && error.status === 403) return <ForbiddenState />;
   const id = error instanceof ApiError ? error.requestId : null;
   return (
     <div role="alert" className="flex flex-col items-center gap-2 px-4 py-12 text-center">
       <AlertTriangle className="size-8 text-danger" />
       <p className="font-medium">{errorMessage(error)}</p>
-      {id && <p className="text-xs text-muted-foreground">Error ID: {id}</p>}
+      {id && <p className="text-xs text-muted-foreground">{t("errorId", { id })}</p>}
       {onRetry && (
         <Button variant="outline" onClick={onRetry}>
-          Retry
+          {tc("retry")}
         </Button>
       )}
     </div>

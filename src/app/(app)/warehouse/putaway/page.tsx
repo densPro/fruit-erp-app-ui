@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import { pageTitle } from "@/lib/i18n/metadata";
 import { PutawayView } from "@/modules/warehouse/putaway";
 
-export const metadata: Metadata = { title: "Put-away" };
+export const generateMetadata = pageTitle("putaway");
 
 export default function Page() {
   return <PutawayView />;

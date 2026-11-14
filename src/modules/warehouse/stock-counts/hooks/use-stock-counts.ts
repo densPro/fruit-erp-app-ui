@@ -1,6 +1,7 @@
 "use client";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { stockCountsApi } from "../api";
 
 export function useStockCounts(p: { status?: string; location_id?: string; offset: number }) {
@@ -18,24 +19,29 @@ function useRefresh() {
 
 export function useOpenCount() {
   const refresh = useRefresh();
-  return useMutation({ mutationFn: stockCountsApi.open, onSuccess: () => { toast.success("Count opened"); return refresh(); } });
+  const t = useTranslations("warehouse.stockCounts");
+  return useMutation({ mutationFn: stockCountsApi.open, onSuccess: () => { toast.success(t("openedToast")); return refresh(); } });
 }
 export function useRecordLines(id: string) {
   const refresh = useRefresh();
-  return useMutation({ mutationFn: (lines: { item_id: string; counted_qty: number }[]) => stockCountsApi.record(id, lines), onSuccess: () => { toast.success("Counts saved"); return refresh(); } });
+  const t = useTranslations("warehouse.stockCounts");
+  return useMutation({ mutationFn: (lines: { item_id: string; counted_qty: number }[]) => stockCountsApi.record(id, lines), onSuccess: () => { toast.success(t("savedToast")); return refresh(); } });
 }
 export function useSubmitCount(id: string) {
   const refresh = useRefresh();
-  return useMutation({ mutationFn: () => stockCountsApi.submit(id), onSuccess: () => { toast.success("Count submitted for approval"); return refresh(); } });
+  const t = useTranslations("warehouse.stockCounts");
+  return useMutation({ mutationFn: () => stockCountsApi.submit(id), onSuccess: () => { toast.success(t("submittedToast")); return refresh(); } });
 }
 export function useApproveCount(id: string) {
   const refresh = useRefresh();
+  const t = useTranslations("warehouse.stockCounts");
   return useMutation({
     mutationFn: (reason: string) => stockCountsApi.approve(id, reason),
-    onSuccess: () => { toast.success("Count approved. Stock adjusted."); return refresh(["levels", "movements"]); },
+    onSuccess: () => { toast.success(t("approvedToast")); return refresh(["levels", "movements"]); },
   });
 }
 export function useCancelCount(id: string) {
   const refresh = useRefresh();
-  return useMutation({ mutationFn: () => stockCountsApi.cancel(id), onSuccess: () => { toast.success("Count cancelled"); return refresh(); } });
+  const t = useTranslations("warehouse.stockCounts");
+  return useMutation({ mutationFn: () => stockCountsApi.cancel(id), onSuccess: () => { toast.success(t("cancelledToast")); return refresh(); } });
 }

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { AlertTriangle, ClipboardCheck, ClipboardList, type LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader, RequirePermission } from "@/components/common/states";
@@ -33,15 +34,16 @@ export function WarehouseDashboard() {
   const bad = useReceipts({ has_discrepancy: true, offset: 0 });
   const openPicks = usePickLists({ status: "open", offset: 0 });
   const inProgress = usePickLists({ status: "in_progress", offset: 0 });
+  const t = useTranslations("warehouse.dashboard");
 
   return (
     <RequirePermission allowed={can("stock:view")}>
-      <PageHeader title="Warehouse" description="What needs attention right now." />
+      <PageHeader title={t("title")} description={t("description")} />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Tile title="Receipts with discrepancies" icon={AlertTriangle} href="/warehouse/receipts" value={bad.data?.total} loading={bad.isLoading} hint="Short, over or unexpected deliveries" />
-        <Tile title="Active pick lists" icon={ClipboardList} href="/warehouse/pick-lists" value={(openPicks.data?.total ?? 0) + (inProgress.data?.total ?? 0)} loading={openPicks.isLoading || inProgress.isLoading} hint="Open or in progress" />
-        <Tile title="Counts in progress" icon={ClipboardCheck} href="/warehouse/stock-counts" value={openCounts.data?.total} loading={openCounts.isLoading} hint="Being counted on the floor" />
-        <Tile title="Counts awaiting approval" icon={ClipboardCheck} href="/warehouse/stock-counts" value={submitted.data?.total} loading={submitted.isLoading} hint="Submitted, stock not yet adjusted" />
+        <Tile title={t("discrepancies")} icon={AlertTriangle} href="/warehouse/receipts" value={bad.data?.total} loading={bad.isLoading} hint={t("discrepanciesHint")} />
+        <Tile title={t("activePicks")} icon={ClipboardList} href="/warehouse/pick-lists" value={(openPicks.data?.total ?? 0) + (inProgress.data?.total ?? 0)} loading={openPicks.isLoading || inProgress.isLoading} hint={t("activePicksHint")} />
+        <Tile title={t("countsInProgress")} icon={ClipboardCheck} href="/warehouse/stock-counts" value={openCounts.data?.total} loading={openCounts.isLoading} hint={t("countsInProgressHint")} />
+        <Tile title={t("countsAwaiting")} icon={ClipboardCheck} href="/warehouse/stock-counts" value={submitted.data?.total} loading={submitted.isLoading} hint={t("countsAwaitingHint")} />
       </div>
     </RequirePermission>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
@@ -24,8 +25,10 @@ type Props<T> = {
 
 /** Server-side paginated table with loading, empty and error states. */
 export function DataTable<T>({
-  columns, data, isLoading, error, onRetry, offset, onOffsetChange, emptyTitle = "Nothing here yet", emptyHint, onRowClick,
+  columns, data, isLoading, error, onRetry, offset, onOffsetChange, emptyTitle, emptyHint, onRowClick,
 }: Props<T>) {
+  const t = useTranslations("table");
+  const ts = useTranslations("states");
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({ data: data?.items ?? [], columns, getCoreRowModel: getCoreRowModel(), manualPagination: true });
 
@@ -38,7 +41,7 @@ export function DataTable<T>({
         ))}
       </div>
     );
-  if (!data?.items.length) return <EmptyState title={emptyTitle} hint={emptyHint} />;
+  if (!data?.items.length) return <EmptyState title={emptyTitle ?? ts("emptyDefault")} hint={emptyHint} />;
 
   const total = data.total;
   const from = offset + 1;
@@ -67,14 +70,12 @@ export function DataTable<T>({
         </TBody>
       </Table>
       <div className="flex items-center justify-between border-t px-3 py-2 text-sm text-muted-foreground">
-        <span>
-          {from}-{to} of {total}
-        </span>
+        <span>{t("range", { from, to, total })}</span>
         <div className="flex gap-1">
-          <Button variant="outline" size="sm" disabled={offset === 0} onClick={() => onOffsetChange(Math.max(0, offset - PAGE_SIZE))} aria-label="Previous page">
+          <Button variant="outline" size="sm" disabled={offset === 0} onClick={() => onOffsetChange(Math.max(0, offset - PAGE_SIZE))} aria-label={t("previousPage")}>
             <ChevronLeft />
           </Button>
-          <Button variant="outline" size="sm" disabled={to >= total} onClick={() => onOffsetChange(offset + PAGE_SIZE)} aria-label="Next page">
+          <Button variant="outline" size="sm" disabled={to >= total} onClick={() => onOffsetChange(offset + PAGE_SIZE)} aria-label={t("nextPage")}>
             <ChevronRight />
           </Button>
         </div>

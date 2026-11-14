@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import { pageTitle } from "@/lib/i18n/metadata";
 import { PickListsView } from "@/modules/warehouse/picking";
 
-export const metadata: Metadata = { title: "Pick lists" };
+export const generateMetadata = pageTitle("pickLists");
 
 export default function Page() {
   return <PickListsView />;

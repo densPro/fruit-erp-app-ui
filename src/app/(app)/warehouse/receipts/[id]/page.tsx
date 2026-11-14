@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import { pageTitle } from "@/lib/i18n/metadata";
 import { ReceiptDetail } from "@/modules/warehouse/receiving";
 
-export const metadata: Metadata = { title: "Receipt" };
+export const generateMetadata = pageTitle("receipt");
 
 export default async function Page({ params }: PageProps<"/warehouse/receipts/[id]">) {
   const { id } = await params;

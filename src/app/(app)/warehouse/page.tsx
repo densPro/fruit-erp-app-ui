@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import { pageTitle } from "@/lib/i18n/metadata";
 import { WarehouseDashboard } from "@/modules/warehouse/dashboard";
 
-export const metadata: Metadata = { title: "Warehouse" };
+export const generateMetadata = pageTitle("warehouse");
 
 export default function Page() {
   return <WarehouseDashboard />;

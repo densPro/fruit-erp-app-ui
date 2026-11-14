@@ -1,6 +1,7 @@
 "use client";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { receivingApi } from "../api";
 
 export function usePurchaseOrders(p: { status?: string; offset: number }) {
@@ -17,18 +18,20 @@ export function useReceipt(id: string) {
 }
 export function useCreatePO() {
   const qc = useQueryClient();
+  const t = useTranslations("warehouse.receiving.purchaseOrders");
   return useMutation({
     mutationFn: receivingApi.createPO,
-    onSuccess: () => { toast.success("Purchase order created"); return qc.invalidateQueries({ queryKey: ["wh", "pos"] }); },
+    onSuccess: () => { toast.success(t("createdToast")); return qc.invalidateQueries({ queryKey: ["wh", "pos"] }); },
   });
 }
 export function useCreateReceipt() {
   const qc = useQueryClient();
+  const t = useTranslations("warehouse.receiving.form");
   return useMutation({
     mutationFn: receivingApi.createReceipt,
     onSuccess: (r) => {
-      if (r.has_discrepancy) toast.warning("Receipt booked with discrepancies. Review the flagged lines.");
-      else toast.success("Receipt booked into the receiving dock");
+      if (r.has_discrepancy) toast.warning(t("discrepancyToast"));
+      else toast.success(t("bookedToast"));
       return Promise.all(["receipts", "pos", "po", "levels", "movements"].map((k) => qc.invalidateQueries({ queryKey: ["wh", k] })));
     },
   });

@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import { LoginForm } from "./login-form";
 
-export const metadata: Metadata = { title: "Sign in" };
+import { pageTitle } from "@/lib/i18n/metadata";
+
+export const generateMetadata = pageTitle("signIn");
 
 export default function LoginPage() {
   return (

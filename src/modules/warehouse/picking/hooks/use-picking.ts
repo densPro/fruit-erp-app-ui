@@ -1,6 +1,7 @@
 "use client";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { pickingApi } from "../api";
 
 const stockKeys = ["levels", "movements", "picks", "pick"];
@@ -13,16 +14,19 @@ export function usePickList(id: string) {
 }
 export function useCreatePickList() {
   const qc = useQueryClient();
-  return useMutation({ mutationFn: pickingApi.create, onSuccess: () => { toast.success("Pick list created"); return qc.invalidateQueries({ queryKey: ["wh", "picks"] }); } });
+  const t = useTranslations("warehouse.picking");
+  return useMutation({ mutationFn: pickingApi.create, onSuccess: () => { toast.success(t("createdToast")); return qc.invalidateQueries({ queryKey: ["wh", "picks"] }); } });
 }
 export function useConfirmPick(id: string) {
   const qc = useQueryClient();
+  const t = useTranslations("warehouse.picking");
   return useMutation({
     mutationFn: ({ lineId, quantity }: { lineId: string; quantity?: number }) => pickingApi.confirm(id, lineId, quantity),
-    onSuccess: () => { toast.success("Pick confirmed"); return Promise.all(stockKeys.map((k) => qc.invalidateQueries({ queryKey: ["wh", k] }))); },
+    onSuccess: () => { toast.success(t("confirmedToast")); return Promise.all(stockKeys.map((k) => qc.invalidateQueries({ queryKey: ["wh", k] }))); },
   });
 }
 export function useCancelPickList(id: string) {
   const qc = useQueryClient();
-  return useMutation({ mutationFn: () => pickingApi.cancel(id), onSuccess: () => { toast.success("Pick list cancelled"); return Promise.all(stockKeys.map((k) => qc.invalidateQueries({ queryKey: ["wh", k] }))); } });
+  const t = useTranslations("warehouse.picking");
+  return useMutation({ mutationFn: () => pickingApi.cancel(id), onSuccess: () => { toast.success(t("cancelledToast")); return Promise.all(stockKeys.map((k) => qc.invalidateQueries({ queryKey: ["wh", k] }))); } });
 }
