@@ -8,13 +8,14 @@
   --brand-100: #efece9;
 
   /* semantic tokens, light */
-  --background: var(--brand-100);
+  /* surfaces are tints of brand-700 (#3c5759), the sidebar color, so the whole UI shares one teal hue */
+  --background: color-mix(in oklab, var(--brand-700) 8%, white);
   --foreground: var(--brand-950);
-  --card: color-mix(in oklab, var(--brand-100), white 60%);
+  --card: color-mix(in oklab, var(--brand-700) 2.5%, white);
   --card-foreground: var(--brand-950);
-  --muted: color-mix(in oklab, var(--brand-300) 45%, var(--brand-100));
+  --muted: color-mix(in oklab, var(--brand-700) 14%, white);
   --muted-foreground: var(--brand-700);
-  --border: var(--brand-300);
+  --border: color-mix(in oklab, var(--brand-700) 24%, white);
   --primary: var(--brand-700);
   --primary-foreground: var(--brand-100);
   --secondary: var(--brand-500);
@@ -30,36 +31,37 @@
   --warning: #e0a100;
   --warning-foreground: #2b1d00;
   --ring: var(--brand-700);
-  --sidebar: var(--brand-950);
-  --sidebar-foreground: var(--brand-100);
-  --sidebar-active: var(--brand-200);
-  --sidebar-active-foreground: var(--brand-950);
+  --sidebar: color-mix(in oklab, var(--brand-700) 24%, black); /* same as dark */
+  --sidebar-foreground: #e8f0f0;
+  --sidebar-active: #7fb8b5;
+  --sidebar-active-foreground: #132022;
 }
 
 .dark {
-  --background: var(--brand-950);
-  --foreground: var(--brand-100);
-  --card: color-mix(in oklab, var(--brand-950), white 6%);
-  --card-foreground: var(--brand-100);
-  --muted: color-mix(in oklab, var(--brand-950), white 10%);
-  --muted-foreground: var(--brand-500);
-  --border: color-mix(in oklab, var(--brand-950), white 16%);
-  --primary: var(--brand-200);
-  --primary-foreground: var(--brand-950);
-  --secondary: var(--brand-700);
-  --secondary-foreground: var(--brand-100);
-  --accent: var(--brand-700);
-  --accent-foreground: var(--brand-100);
-  --highlight: var(--brand-200);
-  --highlight-foreground: var(--brand-950);
+  /* dark palette: tints and shades of brand-700 (#3c5759) plus a lighter teal accent */
+  --background: #1a2526;
+  --foreground: #e8f0f0;
+  --card: #243233;
+  --card-foreground: #e8f0f0;
+  --muted: #2e4041; /* hover rows, skeletons: between card and raised */
+  --muted-foreground: #a9bcbd;
+  --border: #4f6e70;
+  --primary: #7fb8b5;
+  --primary-foreground: #132022;
+  --secondary: #9ccbc8; /* accent hover */
+  --secondary-foreground: #132022;
+  --accent: var(--brand-700); /* raised: selected rows, menus */
+  --accent-foreground: #e8f0f0;
+  --highlight: #7fb8b5;
+  --highlight-foreground: #132022;
   --success: var(--brand-200);
   --success-foreground: var(--brand-950);
   --danger: #ff8a80;
   --danger-foreground: #3b0a07;
   --warning: #ffcc4d;
-  --ring: var(--brand-200);
-  --sidebar: color-mix(in oklab, var(--brand-950), black 30%);
-  --sidebar-foreground: var(--brand-100);
-  --sidebar-active: var(--brand-200);
-  --sidebar-active-foreground: var(--brand-950);
+  --ring: #7fb8b5;
+  --sidebar: color-mix(in oklab, var(--brand-700) 24%, black);
+  --sidebar-foreground: #e8f0f0;
+  --sidebar-active: #7fb8b5;
+  --sidebar-active-foreground: #132022;
 }

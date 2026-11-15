@@ -138,6 +138,8 @@ These are the only brand colors, shared by every module. Define them once as CSS
 | `brand-200` | `#D1EBDB` | soft mint: active nav item, success badges, selected states, primary on dark |
 | `brand-100` | `#EFECE9` | warm off-white: page background (light), text on dark |
 
+Light surfaces (`background`, `card`, `muted`, `border`) are `color-mix` tints of `brand-700` (#3c5759). The dark theme uses a fixed teal set from the owner (page `#1a2526`, card `#243233`, border `#4f6e70`, text `#e8f0f0`, accent `#7fb8b5`), with `brand-700` as the raised/selected color; the sidebar is a deep teal-black in both themes *(my call)*.
+
 Rules:
 - Never hardcode hex values in components; use semantic tokens (`bg-primary`, `text-muted-foreground`, ...) or `brand-*` tokens. Semantic tokens switch automatically between light and dark in `src/styles/tokens.css`.
 - Keep text contrast at WCAG AA or better. **Never use `brand-500` as text on light backgrounds** (2.4:1); use `brand-700` instead. `brand-500` is fine on `brand-950` (5.6:1).
